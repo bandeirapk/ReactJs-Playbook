@@ -1,10 +1,40 @@
+import { useState } from 'react';
+
 import styles from './Comment.module.css';
 
 import { Avatar } from './Avatar';
 
 import { Trash, ThumbsUp } from '@phosphor-icons/react';
 
-export function Comment() {
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+
+export function Comment({ content, onDeleteComment }) {
+  const [likeCount, setLikeCount] = useState(0);
+
+  // const publishedDateFormatted = format(
+  //   props.publishedAt,
+  //   "d 'de' LLLL 'às' HH:mm'h'",
+  //   {
+  //     locale: ptBR,
+  //   }
+  // );
+
+  // const publishedDateRelativeToNow = formatDistanceToNow(props.publishedAt, {
+  //   locale: ptBR,
+  //   addSuffix: true,
+  // });
+
+  function handleLikeComment() {
+    setLikeCount(state => {
+      return state + 1;
+    });
+  }
+
+  function handleDeleteComment() {
+    onDeleteComment(content);
+  }
+
   return (
     <div className={styles.comment}>
       <Avatar
@@ -22,22 +52,25 @@ export function Comment() {
                 dateTime="2021-05-11T08:13:00"
               >
                 {' '}
-                Publicado há 1h atrás
+                Publicado há cerca de 1h atrás
               </time>
             </div>
 
-            <button title="Deletar comentário">
+            <button
+              onClick={handleDeleteComment}
+              title="Deletar comentário"
+            >
               <Trash size={24} />
             </button>
           </header>
 
-          <p>Muito bom Devon, parabéns!! 👏👏</p>
+          <p>{content}</p>
         </div>
 
         <footer>
-          <button>
+          <button onClick={handleLikeComment}>
             <ThumbsUp size={20} />
-            Aplaudir <span>20</span>
+            Aplaudir <span>{likeCount}</span>
           </button>
         </footer>
       </div>
